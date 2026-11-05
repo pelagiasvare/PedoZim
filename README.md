@@ -1,4 +1,4 @@
-# Pedo — School Management System
+# PedoZim — School Management System
 **Capstone Project Proposal & Implementation — Phase 1 & 2**  
 *Prepared by: Pelagia Svare*  
 *Target: Primary and Secondary Schools (Zimbabwe & Regional)*
@@ -6,7 +6,7 @@
 ---
 
 ## 📌 Executive Summary
-**Pedo** is a full-stack, web-based School Management System engineered to eliminate the inefficiencies of paper registers, physical files, and disjointed spreadsheets. It provides school leadership, teachers, bursars, and administrators with an integrated platform to record, manage, and analyze student records, daily attendance, examination marks, fee collections, and community announcements.
+**PedoZim** is a full-stack, web-based School Management System engineered to eliminate the inefficiencies of paper registers, physical files, and disjointed spreadsheets. It provides school leadership, teachers, bursars, and administrators with an integrated platform to record, manage, and analyze student records, daily attendance, examination marks, fee collections, and community announcements.
 
 ---
 

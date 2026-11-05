@@ -1,0 +1,10 @@
+{
+  "name": "capstone-project",
+  "private": true,
+  "scripts": {
+    "start": "pnpm --dir client dev",
+    "dev": "pnpm --dir client dev",
+    "build": "pnpm --dir client build"
+  }
+}
+

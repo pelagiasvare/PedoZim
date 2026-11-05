@@ -1,0 +1,24 @@
+# Node / Frontend
+node_modules/
+dist/
+.pnpm-store/
+*.log
+
+# .NET / Backend
+bin/
+obj/
+*.user
+*.suo
+.vs/
+
+# Environment & IDE
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db
+
+# Test captures / screenshots
+_*.png
+laptop-*.png
+mobile-*.png
+image.png
