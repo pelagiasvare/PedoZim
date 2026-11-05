@@ -41,7 +41,7 @@ Capstoneproject/
 
 ---
 
-## 🚀 Key Modules & Features![alt text]
+## 🚀 Key Modules & Features
 
 ### 1. Role-Based Dashboard & KPIs
 - Dynamic switching between **Administrator**, **Teacher**, and **Student/Parent** personas.
@@ -127,4 +127,3 @@ Run migrations with:
 dotnet ef migrations add InitialCreate
 dotnet ef database update
 ```
-# PedoZim
