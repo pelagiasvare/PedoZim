@@ -2087,3 +2087,13 @@ button { font-family: inherit; cursor: pointer; }
   .social-sidebar-line  { display: none; }
   .social-sidebar-icon  { width: 28px; height: 28px; border-radius: 6px; }
 }
+
+/* Spin animation for AI loading */
+@keyframes spin {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+.spin-animate {
+  animation: spin 1s linear infinite;
+}

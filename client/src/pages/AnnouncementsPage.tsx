@@ -8,9 +8,12 @@ import {
   X,
   Tag,
   Users,
+  Sparkles,
+  Loader2,
 } from 'lucide-react';
 import { Announcement } from '../types';
 import { dataService } from '../services/dataService';
+import { generateAnnouncementDraft } from '../services/aiService';
 
 export const AnnouncementsPage: React.FC = () => {
   const [announcements, setAnnouncements] = useState<Announcement[]>(
@@ -18,6 +21,11 @@ export const AnnouncementsPage: React.FC = () => {
   );
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedCategory, setSelectedCategory] = useState<string>('ALL');
+
+  // AI Draft State
+  const [aiPromptTopic, setAiPromptTopic] = useState('');
+  const [isGeneratingDraft, setIsGeneratingDraft] = useState(false);
+  const [showAiDraftBox, setShowAiDraftBox] = useState(false);
 
   const [formData, setFormData] = useState({
     title: '',
@@ -41,6 +49,29 @@ export const AnnouncementsPage: React.FC = () => {
       author: 'Pelagia Svare (Head Admin)',
       isPinned: false,
     });
+    setAiPromptTopic('');
+    setShowAiDraftBox(false);
+  };
+
+  const handleGenerateAiDraft = async () => {
+    if (!aiPromptTopic.trim()) return;
+    setIsGeneratingDraft(true);
+    try {
+      const draft = await generateAnnouncementDraft(
+        aiPromptTopic,
+        formData.targetAudience,
+        formData.category
+      );
+      setFormData((prev) => ({
+        ...prev,
+        title: draft.title,
+        content: draft.content,
+      }));
+    } catch (e) {
+      console.error(e);
+    } finally {
+      setIsGeneratingDraft(false);
+    }
   };
 
   const filteredAnnouncements = announcements.filter((a) => {
@@ -146,6 +177,51 @@ export const AnnouncementsPage: React.FC = () => {
 
             <form onSubmit={handlePost}>
               <div className="modal-body">
+                {/* AI Announcement Assistant Card */}
+                <div style={{ background: '#f0f5fa', border: '1px solid #c3d7e8', borderRadius: '10px', padding: '12px 14px', marginBottom: '16px' }}>
+                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '6px', fontSize: '13px', fontWeight: 700, color: '#496d8f' }}>
+                      <Sparkles size={14} style={{ color: '#6c95bc' }} /> PedoZim AI Notice Drafter
+                    </div>
+                    <button
+                      type="button"
+                      className="btn btn-secondary btn-sm"
+                      style={{ fontSize: '11px', padding: '3px 8px' }}
+                      onClick={() => setShowAiDraftBox(!showAiDraftBox)}
+                    >
+                      {showAiDraftBox ? 'Hide AI Drafter' : '✨ Draft with AI'}
+                    </button>
+                  </div>
+
+                  {showAiDraftBox && (
+                    <div style={{ marginTop: '10px', display: 'flex', flexDirection: 'column', gap: '8px' }}>
+                      <span style={{ fontSize: '11px', color: 'var(--text-muted)' }}>
+                        Enter a short topic, and Gemini AI will draft the announcement headline & WhatsApp notice:
+                      </span>
+                      <div style={{ display: 'flex', gap: '8px' }}>
+                        <input
+                          type="text"
+                          className="form-input"
+                          style={{ fontSize: '12px' }}
+                          placeholder="e.g., Interhouse sports day on Friday, all house colors required"
+                          value={aiPromptTopic}
+                          onChange={(e) => setAiPromptTopic(e.target.value)}
+                        />
+                        <button
+                          type="button"
+                          className="btn btn-primary btn-sm"
+                          disabled={isGeneratingDraft || !aiPromptTopic.trim()}
+                          onClick={handleGenerateAiDraft}
+                          style={{ whiteSpace: 'nowrap', display: 'inline-flex', alignItems: 'center', gap: '4px' }}
+                        >
+                          {isGeneratingDraft ? <Loader2 size={12} className="spin-animate" /> : <Sparkles size={12} />}
+                          {isGeneratingDraft ? 'Drafting...' : 'Generate'}
+                        </button>
+                      </div>
+                    </div>
+                  )}
+                </div>
+
                 <div className="form-group">
                   <label className="form-label">Announcement Title *</label>
                   <input
