@@ -59,10 +59,22 @@ export const StudentPortal: React.FC<Props> = ({ currentUser, onLogout }) => {
 
   return (
     <div style={{ minHeight: '100vh', display: 'flex', flexDirection: 'column', fontFamily: 'Inter,system-ui,sans-serif', background: '#f1f5f9' }}>
-      <header style={{ height: '46px', background: '#166534', borderBottom: '1px solid #15803d', display: 'flex', alignItems: 'center', padding: '0 16px', gap: '12px', position: 'sticky', top: 0, zIndex: 200, flexShrink: 0 }}>
-        <School size={16} color="#fff" />
-        <span style={{ fontWeight: 700, fontSize: '14px', color: '#fff' }}>Pedo <span style={{ color: '#86efac' }}>Zim</span></span>
-        <span style={{ fontSize: '12px', color: 'rgba(255,255,255,0.5)', flex: 1 }}>— Student Portal</span>
+      <header style={{ height: '52px', background: '#2F628F', borderBottom: '1px solid #1e4a72', display: 'flex', alignItems: 'center', padding: '0 16px', gap: '12px', position: 'sticky', top: 0, zIndex: 200, flexShrink: 0 }}>
+        <img
+          src="/logo.png"
+          alt="Pedo Zim Logo"
+          style={{ height: '36px', width: 'auto', maxWidth: '140px', objectFit: 'contain', display: 'block' }}
+          onError={(e) => {
+            (e.currentTarget as HTMLImageElement).style.display = 'none';
+            const fallback = document.getElementById('student-header-brand-fallback');
+            if (fallback) fallback.style.display = 'inline-flex';
+          }}
+        />
+        <span id="student-header-brand-fallback" style={{ display: 'none', alignItems: 'center', gap: '6px' }}>
+          <School size={16} color="#fff" />
+          <span style={{ fontWeight: 700, fontSize: '14px', color: '#fff' }}>Pedo <span style={{ color: '#93c5fd' }}>Zim</span></span>
+        </span>
+        <span style={{ fontSize: '12px', color: 'rgba(255,255,255,0.7)', flex: 1 }}>— Student Portal</span>
         <Bell size={14} color="rgba(255,255,255,0.7)" />
         <span style={{ fontSize: '12px', color: 'rgba(255,255,255,0.85)', marginLeft: '8px' }}>{currentUser.name}</span>
         <button onClick={onLogout} style={{ display: 'flex', alignItems: 'center', gap: '4px', background: 'rgba(255,255,255,0.1)', border: '1px solid rgba(255,255,255,0.25)', borderRadius: '3px', color: '#fff', fontSize: '12px', padding: '3px 8px', cursor: 'pointer' }}>
@@ -70,7 +82,7 @@ export const StudentPortal: React.FC<Props> = ({ currentUser, onLogout }) => {
         </button>
       </header>
       <div style={{ display: 'flex', flex: 1 }}>
-        <aside style={{ width: '220px', background: '#fff', borderRight: '1px solid #e2e8f0', display: 'flex', flexDirection: 'column', position: 'sticky', top: '46px', height: 'calc(100vh - 46px)', overflowY: 'auto', flexShrink: 0 }}>
+        <aside style={{ width: '220px', background: '#fff', borderRight: '1px solid #e2e8f0', display: 'flex', flexDirection: 'column', position: 'sticky', top: '46px', height: 'calc(100vh - 46px)', overflowY: "auto", overflowX: "hidden", flexShrink: 0 }}>
           {student && (
             <div style={{ padding: '12px 14px', borderBottom: '1px solid #e2e8f0', background: '#f0fdf4' }}>
               <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
@@ -153,7 +165,7 @@ const SProf: React.FC<any> = ({ student, invoice }) => (
               <div style={{ fontWeight: 700, fontSize: '16px' }}>{student.firstName} {student.lastName}</div>
               <div style={{ display: 'flex', gap: '6px', margin: '6px 0', flexWrap: 'wrap' as const }}>
                 <Badge label={student.className}       color="#166534" bg="#f0fdf4"  border="#bbf7d0" />
-                <Badge label={student.admissionNumber} color="#1e40af" bg="#eff6ff"  border="#bfdbfe" />
+                <Badge label={student.admissionNumber} color="#2F628F" bg="#eff6ff"  border="#bfdbfe" />
                 <Badge label={student.status}          color="#334155" bg="#f1f5f9"  border="#e2e8f0" />
               </div>
               <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit,minmax(200px,1fr))', gap: '8px', marginTop: '10px', fontSize: '13px' }}>
@@ -199,7 +211,7 @@ const SSubs: React.FC<any> = ({ subjects, marks }) => (
                 <tr key={s.id} style={{ borderBottom: '1px solid #f1f5f9' }}>
                   <td style={{ padding: '8px 12px', color: '#64748b' }}>{s.code}</td>
                   <td style={{ padding: '8px 12px', fontWeight: 500 }}>{s.name}</td>
-                  <td style={{ padding: '8px 12px' }}><Badge label={s.category} color="#1e40af" bg="#eff6ff" border="#bfdbfe" /></td>
+                  <td style={{ padding: '8px 12px' }}><Badge label={s.category} color="#2F628F" bg="#eff6ff" border="#bfdbfe" /></td>
                   <td style={{ padding: '8px 12px', color: '#64748b' }}>{s.teacherName || '—'}</td>
                   <td style={{ padding: '8px 12px', fontWeight: 700 }}>{m ? `${m.totalScore}%` : '—'}</td>
                   <td style={{ padding: '8px 12px' }}>{m && gs ? <Badge label={m.grade} {...gs} /> : <span style={{ color: '#94a3b8', fontSize: '12px' }}>No mark</span>}</td>
@@ -384,7 +396,7 @@ const SMat: React.FC = () => (
               <span style={{ fontSize: '11px', fontWeight: 700, color: '#166534', textTransform: 'uppercase' }}>{mat.subject}</span>
               <div style={{ fontWeight: 500, fontSize: '13px', marginTop: '2px' }}>{mat.title}</div>
             </div>
-            <span style={{ padding: '2px 7px', borderRadius: '3px', fontSize: '11px', fontWeight: 600, background: '#eff6ff', color: '#1e40af', border: '1px solid #bfdbfe' }}>{mat.type}</span>
+            <span style={{ padding: '2px 7px', borderRadius: '3px', fontSize: '11px', fontWeight: 600, background: '#eff6ff', color: '#2F628F', border: '1px solid #bfdbfe' }}>{mat.type}</span>
           </div>
         ))}
         <div style={{ fontSize: '12px', color: '#64748b', padding: '10px', background: '#fffbeb', borderRadius: '3px', border: '1px solid #fde68a', marginTop: '4px' }}>

@@ -105,37 +105,17 @@ export const App: React.FC = () => {
 
   return (
     <div style={{ minHeight: '100vh', display: 'flex', flexDirection: 'column' }}>
-      <header className="pedo-nav-wrapper">
-        <div className="pedo-nav-container">
-          <div className="pedo-brand" onClick={handleLogout} style={{ cursor: 'pointer' }}>
-            <div className="pedo-logo-icon"><School size={18} /></div>
-            <div className="pedo-brand-title">Pedo <span>Zim</span></div>
-          </div>
-          <nav className="pedo-nav-links">
-            {(['dashboard','students','attendance','marks','fees'] as ActivePage[]).map((p) => (
-              <button key={p} className={`pedo-nav-link ${activePage === p ? 'active' : ''}`} onClick={() => handleNavigate(p)}>
-                {p === 'dashboard' ? 'Dashboard' : p === 'students' ? 'Students' : p === 'attendance' ? 'Attendance' : p === 'marks' ? 'ZIMSEC Marks' : 'Fees'}
-              </button>
-            ))}
-          </nav>
-          <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-            <button className="btn-nav-overview" onClick={handleLogout}>← Back to Home</button>
-          </div>
-        </div>
-      </header>
-
       <div className="app-layout">
         <Sidebar activePage={activePage} onNavigate={handleNavigate} currentUser={currentUser} />
         <div className="main-wrapper">
           <TopBar
             currentUser={currentUser}
             onSwitchUser={(u) => { setCurrentUser(u); handleLogin(u); }}
-            theme={theme}
-            onToggleTheme={toggleTheme}
             searchTerm={searchTerm}
             onSearchChange={setSearchTerm}
             activePage={activePage}
             onNavigate={handleNavigate}
+            onLogout={handleLogout}
           />
           <main className="content-area">{renderPage()}</main>
         </div>

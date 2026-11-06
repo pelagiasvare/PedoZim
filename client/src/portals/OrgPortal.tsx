@@ -50,10 +50,22 @@ export const OrgPortal: React.FC<Props> = ({ currentUser, onLogout }) => {
 
   return (
     <div style={{ minHeight: '100vh', display: 'flex', flexDirection: 'column', fontFamily: 'Inter,system-ui,sans-serif', background: '#f1f5f9' }}>
-      <header style={{ height: '46px', background: '#7c3aed', borderBottom: '1px solid #6d28d9', display: 'flex', alignItems: 'center', padding: '0 16px', gap: '12px', position: 'sticky', top: 0, zIndex: 200, flexShrink: 0 }}>
-        <School size={16} color="#fff" />
-        <span style={{ fontWeight: 700, fontSize: '14px', color: '#fff' }}>Pedo <span style={{ color: '#c4b5fd' }}>Zim</span></span>
-        <span style={{ fontSize: '12px', color: 'rgba(255,255,255,0.5)', flex: 1 }}>— Organisation Dashboard</span>
+      <header style={{ height: '52px', background: '#7c3aed', borderBottom: '1px solid #6d28d9', display: 'flex', alignItems: 'center', padding: '0 16px', gap: '12px', position: 'sticky', top: 0, zIndex: 200, flexShrink: 0 }}>
+        <img
+          src="/logo.png"
+          alt="Pedo Zim Logo"
+          style={{ height: '36px', width: 'auto', maxWidth: '140px', objectFit: 'contain', display: 'block' }}
+          onError={(e) => {
+            (e.currentTarget as HTMLImageElement).style.display = 'none';
+            const fallback = document.getElementById('org-header-brand-fallback');
+            if (fallback) fallback.style.display = 'inline-flex';
+          }}
+        />
+        <span id="org-header-brand-fallback" style={{ display: 'none', alignItems: 'center', gap: '6px' }}>
+          <School size={16} color="#fff" />
+          <span style={{ fontWeight: 700, fontSize: '14px', color: '#fff' }}>Pedo <span style={{ color: '#c4b5fd' }}>Zim</span></span>
+        </span>
+        <span style={{ fontSize: '12px', color: 'rgba(255,255,255,0.7)', flex: 1 }}>— Organisation Dashboard</span>
         <Bell size={14} color="rgba(255,255,255,0.7)" />
         <span style={{ fontSize: '12px', color: 'rgba(255,255,255,0.85)', marginLeft: '8px' }}>{currentUser.name}</span>
         <button onClick={onLogout} style={{ display: 'flex', alignItems: 'center', gap: '4px', background: 'rgba(255,255,255,0.1)', border: '1px solid rgba(255,255,255,0.25)', borderRadius: '3px', color: '#fff', fontSize: '12px', padding: '3px 8px', cursor: 'pointer' }}>
@@ -61,7 +73,7 @@ export const OrgPortal: React.FC<Props> = ({ currentUser, onLogout }) => {
         </button>
       </header>
       <div style={{ display: 'flex', flex: 1 }}>
-        <aside style={{ width: '220px', background: '#fff', borderRight: '1px solid #e2e8f0', display: 'flex', flexDirection: 'column', position: 'sticky', top: '46px', height: 'calc(100vh - 46px)', overflowY: 'auto', flexShrink: 0 }}>
+        <aside style={{ width: '220px', background: '#fff', borderRight: '1px solid #e2e8f0', display: 'flex', flexDirection: 'column', position: 'sticky', top: '46px', height: 'calc(100vh - 46px)', overflowY: "auto", overflowX: "hidden", flexShrink: 0 }}>
           <div style={{ padding: '12px 14px', borderBottom: '1px solid #e2e8f0', background: '#faf5ff' }}>
             <div style={{ fontSize: '10px', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.06em', color: '#94a3b8', marginBottom: '4px' }}>Organisation</div>
             <div style={{ fontWeight: 700, fontSize: '13px' }}>Pedo Zim Ltd.</div>
@@ -238,7 +250,7 @@ const OPerf: React.FC = () => (
               const att = [96, 94, 91, 93][i] || 90;
               const fee = [77, 85, 62, 88][i] || 70;
               const rating = att >= 95 && fee >= 80 ? 'Excellent' : att >= 90 ? 'Good' : 'Needs Attention';
-              const rc = rating === 'Excellent' ? { color: '#166534', bg: '#f0fdf4', border: '#bbf7d0' } : rating === 'Good' ? { color: '#1e40af', bg: '#eff6ff', border: '#bfdbfe' } : { color: '#92400e', bg: '#fffbeb', border: '#fde68a' };
+              const rc = rating === 'Excellent' ? { color: '#166534', bg: '#f0fdf4', border: '#bbf7d0' } : rating === 'Good' ? { color: '#2F628F', bg: '#eff6ff', border: '#bfdbfe' } : { color: '#92400e', bg: '#fffbeb', border: '#fde68a' };
               return (
                 <tr key={s.id} style={{ borderBottom: '1px solid #f1f5f9' }}>
                   <td style={{ padding: '9px 12px', fontWeight: 500 }}>{s.name}</td>

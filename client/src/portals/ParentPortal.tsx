@@ -28,7 +28,7 @@ const NAV: { id: ParentPage; label: string; icon: React.ReactNode }[] = [
 
 export const gradeStyle = (g: string) => {
   if (g === 'A') return { bg: '#f0fdf4', color: '#166534', border: '#bbf7d0' };
-  if (g === 'B') return { bg: '#eff6ff', color: '#1e40af', border: '#bfdbfe' };
+  if (g === 'B') return { bg: '#eff6ff', color: '#2F628F', border: '#bfdbfe' };
   if (g === 'U') return { bg: '#fef2f2', color: '#991b1b', border: '#fecaca' };
   return { bg: '#fffbeb', color: '#92400e', border: '#fde68a' };
 };
@@ -94,10 +94,22 @@ export const ParentPortal: React.FC<Props> = ({ currentUser, onLogout }) => {
 
   return (
     <div style={{ minHeight: '100vh', display: 'flex', flexDirection: 'column', fontFamily: 'Inter,system-ui,sans-serif', background: '#f1f5f9' }}>
-      <header style={{ height: '46px', background: '#1e40af', borderBottom: '1px solid #1e3a8a', display: 'flex', alignItems: 'center', padding: '0 16px', gap: '12px', position: 'sticky', top: 0, zIndex: 200, flexShrink: 0 }}>
-        <School size={16} color="#fff" />
-        <span style={{ fontWeight: 700, fontSize: '14px', color: '#fff' }}>Pedo <span style={{ color: '#93c5fd' }}>Zim</span></span>
-        <span style={{ fontSize: '12px', color: 'rgba(255,255,255,0.5)', flex: 1 }}>— Parent Portal</span>
+      <header style={{ height: '52px', background: '#2F628F', borderBottom: '1px solid #1e4a72', display: 'flex', alignItems: 'center', padding: '0 16px', gap: '12px', position: 'sticky', top: 0, zIndex: 200, flexShrink: 0 }}>
+        <img
+          src="/logo.png"
+          alt="Pedo Zim Logo"
+          style={{ height: '36px', width: 'auto', maxWidth: '140px', objectFit: 'contain', display: 'block' }}
+          onError={(e) => {
+            (e.currentTarget as HTMLImageElement).style.display = 'none';
+            const fallback = document.getElementById('parent-header-brand-fallback');
+            if (fallback) fallback.style.display = 'inline-flex';
+          }}
+        />
+        <span id="parent-header-brand-fallback" style={{ display: 'none', alignItems: 'center', gap: '6px' }}>
+          <School size={16} color="#fff" />
+          <span style={{ fontWeight: 700, fontSize: '14px', color: '#fff' }}>Pedo <span style={{ color: '#93c5fd' }}>Zim</span></span>
+        </span>
+        <span style={{ fontSize: '12px', color: 'rgba(255,255,255,0.7)', flex: 1 }}>— Parent Portal</span>
         <Bell size={14} color="rgba(255,255,255,0.7)" />
         <span style={{ fontSize: '12px', color: 'rgba(255,255,255,0.85)', marginLeft: '8px' }}>{currentUser.name}</span>
         <button onClick={onLogout} style={{ display: 'flex', alignItems: 'center', gap: '4px', background: 'rgba(255,255,255,0.1)', border: '1px solid rgba(255,255,255,0.25)', borderRadius: '3px', color: '#fff', fontSize: '12px', padding: '3px 8px', cursor: 'pointer' }}>
@@ -105,12 +117,12 @@ export const ParentPortal: React.FC<Props> = ({ currentUser, onLogout }) => {
         </button>
       </header>
       <div style={{ display: 'flex', flex: 1 }}>
-        <aside style={{ width: '220px', background: '#fff', borderRight: '1px solid #e2e8f0', display: 'flex', flexDirection: 'column', position: 'sticky', top: '46px', height: 'calc(100vh - 46px)', overflowY: 'auto', flexShrink: 0 }}>
+        <aside style={{ width: '220px', background: '#fff', borderRight: '1px solid #e2e8f0', display: 'flex', flexDirection: 'column', position: 'sticky', top: '46px', height: 'calc(100vh - 46px)', overflowY: "auto", overflowX: "hidden", flexShrink: 0 }}>
           {child && (
             <div style={{ padding: '12px 14px', borderBottom: '1px solid #e2e8f0', background: '#f8fafc' }}>
               <div style={{ fontSize: '10px', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.06em', color: '#94a3b8', marginBottom: '5px' }}>My Child</div>
               <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-                <div style={{ width: '30px', height: '30px', borderRadius: '3px', background: '#1e40af', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#fff', fontWeight: 700, flexShrink: 0 }}>{child.firstName[0]}</div>
+                <div style={{ width: '30px', height: '30px', borderRadius: '3px', background: '#2F628F', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#fff', fontWeight: 700, flexShrink: 0 }}>{child.firstName[0]}</div>
                 <div>
                   <div style={{ fontWeight: 600, fontSize: '12px' }}>{child.firstName} {child.lastName}</div>
                   <div style={{ fontSize: '11px', color: '#64748b' }}>{child.className}</div>
@@ -120,8 +132,8 @@ export const ParentPortal: React.FC<Props> = ({ currentUser, onLogout }) => {
           )}
           <nav style={{ padding: '8px', flex: 1 }}>
             {NAV.map((item) => (
-              <button key={item.id} onClick={() => setPage(item.id)} style={{ display: 'flex', alignItems: 'center', gap: '8px', width: '100%', height: '32px', padding: '0 8px', background: page === item.id ? '#eff6ff' : 'transparent', border: 'none', borderRadius: '3px', color: page === item.id ? '#1e40af' : '#334155', fontSize: '13px', fontWeight: page === item.id ? 600 : 500, textAlign: 'left', cursor: 'pointer', marginBottom: '1px' }}>
-                <span style={{ color: page === item.id ? '#1e40af' : '#94a3b8', display: 'flex' }}>{item.icon}</span>
+              <button key={item.id} onClick={() => setPage(item.id)} style={{ display: 'flex', alignItems: 'center', gap: '8px', width: '100%', height: '32px', padding: '0 8px', background: page === item.id ? '#eff6ff' : 'transparent', border: 'none', borderRadius: '3px', color: page === item.id ? '#2F628F' : '#334155', fontSize: '13px', fontWeight: page === item.id ? 600 : 500, textAlign: 'left', cursor: 'pointer', marginBottom: '1px' }}>
+                <span style={{ color: page === item.id ? '#2F628F' : '#94a3b8', display: 'flex' }}>{item.icon}</span>
                 {item.label}
               </button>
             ))}
@@ -147,7 +159,7 @@ const PHome: React.FC<any> = ({ child, marks, invoice, avg, anns, go }) => (
       <Card>
         <div style={{ fontWeight: 600, fontSize: '13px', marginBottom: '10px', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
           Recent Marks
-          <button onClick={() => go('performance')} style={{ fontSize: '12px', color: '#1e40af', background: 'none', border: 'none', cursor: 'pointer' }}>View all →</button>
+          <button onClick={() => go('performance')} style={{ fontSize: '12px', color: '#2F628F', background: 'none', border: 'none', cursor: 'pointer' }}>View all →</button>
         </div>
         {marks.length === 0 ? <p style={{ fontSize: '12px', color: '#94a3b8' }}>No marks yet.</p> : marks.slice(0, 4).map((m: any) => {
           const gs = gradeStyle(m.grade);
@@ -165,10 +177,10 @@ const PHome: React.FC<any> = ({ child, marks, invoice, avg, anns, go }) => (
       <Card>
         <div style={{ fontWeight: 600, fontSize: '13px', marginBottom: '10px', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
           Announcements
-          <button onClick={() => go('announcements')} style={{ fontSize: '12px', color: '#1e40af', background: 'none', border: 'none', cursor: 'pointer' }}>See all →</button>
+          <button onClick={() => go('announcements')} style={{ fontSize: '12px', color: '#2F628F', background: 'none', border: 'none', cursor: 'pointer' }}>See all →</button>
         </div>
         {anns.slice(0, 3).map((a: any) => (
-          <div key={a.id} style={{ padding: '8px 10px', marginBottom: '6px', background: '#f8fafc', borderRadius: '3px', borderLeft: a.isPinned ? '3px solid #1e40af' : '3px solid #e2e8f0' }}>
+          <div key={a.id} style={{ padding: '8px 10px', marginBottom: '6px', background: '#f8fafc', borderRadius: '3px', borderLeft: a.isPinned ? '3px solid #2F628F' : '3px solid #e2e8f0' }}>
             <div style={{ fontWeight: 600, fontSize: '13px' }}>{a.title}</div>
             <div style={{ fontSize: '11px', color: '#64748b', marginTop: '2px' }}>{a.publishedDate} · {a.category}</div>
           </div>
@@ -198,11 +210,11 @@ const PChild: React.FC<any> = ({ child }) => (
     {child && (
       <Card>
         <div style={{ display: 'flex', gap: '16px', flexWrap: 'wrap' as const, alignItems: 'flex-start' }}>
-          <div style={{ width: '56px', height: '56px', borderRadius: '3px', background: '#1e40af', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#fff', fontWeight: 800, fontSize: '22px', flexShrink: 0 }}>{child.firstName[0]}</div>
+          <div style={{ width: '56px', height: '56px', borderRadius: '3px', background: '#2F628F', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#fff', fontWeight: 800, fontSize: '22px', flexShrink: 0 }}>{child.firstName[0]}</div>
           <div style={{ flex: 1 }}>
             <div style={{ fontWeight: 700, fontSize: '16px' }}>{child.firstName} {child.lastName}</div>
             <div style={{ display: 'flex', gap: '6px', margin: '6px 0', flexWrap: 'wrap' as const }}>
-              <Badge label={child.className} color="#1e40af" bg="#eff6ff" border="#bfdbfe" />
+              <Badge label={child.className} color="#2F628F" bg="#eff6ff" border="#bfdbfe" />
               <Badge label={child.status}    color="#166534" bg="#f0fdf4" border="#bbf7d0" />
               <Badge label={child.gender}    color="#334155" bg="#f1f5f9" border="#e2e8f0" />
             </div>
@@ -227,13 +239,13 @@ const PPerf: React.FC<any> = ({ child, marks, avg }) => (
     <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit,minmax(160px,1fr))', gap: '12px', marginBottom: '16px' }}>
       <SC label="Average" value={`${avg}%`} colour={avg >= 70 ? '#166534' : '#92400e'} />
       <SC label="Subjects" value={`${marks.length}`} />
-      <SC label="Top Grade" value={marks.length > 0 ? [...marks].sort((a: any, b: any) => b.totalScore - a.totalScore)[0].grade : '—'} colour="#1e40af" />
+      <SC label="Top Grade" value={marks.length > 0 ? [...marks].sort((a: any, b: any) => b.totalScore - a.totalScore)[0].grade : '—'} colour="#2F628F" />
       <SC label="Passed" value={`${marks.filter((m: any) => m.totalScore >= 50).length}/${marks.length}`} />
     </div>
     <Card>
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '12px' }}>
         <span style={{ fontWeight: 600, fontSize: '13px' }}>Subject Results</span>
-        <button style={{ display: 'flex', alignItems: 'center', gap: '5px', padding: '5px 10px', background: '#1e40af', color: '#fff', border: '1px solid #1e3a8a', borderRadius: '3px', fontSize: '12px', fontWeight: 600, cursor: 'pointer' }}>
+        <button style={{ display: 'flex', alignItems: 'center', gap: '5px', padding: '5px 10px', background: '#2F628F', color: '#fff', border: '1px solid #1e4a72', borderRadius: '3px', fontSize: '12px', fontWeight: 600, cursor: 'pointer' }}>
           <Download size={12} /> Download Report Card
         </button>
       </div>
@@ -366,7 +378,7 @@ const PHW: React.FC = () => (
         {HW_DATA.map((hw, i) => (
           <div key={i} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '10px 12px', border: '1px solid #e2e8f0', borderRadius: '3px', background: '#f8fafc' }}>
             <div>
-              <span style={{ fontSize: '11px', fontWeight: 700, color: '#1e40af', textTransform: 'uppercase', letterSpacing: '0.04em' }}>{hw.subject}</span>
+              <span style={{ fontSize: '11px', fontWeight: 700, color: '#2F628F', textTransform: 'uppercase', letterSpacing: '0.04em' }}>{hw.subject}</span>
               <div style={{ fontWeight: 500, fontSize: '13px', marginTop: '2px' }}>{hw.title}</div>
               <div style={{ fontSize: '11px', color: '#64748b', marginTop: '2px' }}>Due: {hw.due}</div>
             </div>
@@ -395,7 +407,7 @@ const PTT: React.FC = () => (
       <div style={{ overflowX: 'auto' }}>
         <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: '13px' }}>
           <thead>
-            <tr style={{ background: '#1e40af' }}>
+            <tr style={{ background: '#2F628F' }}>
               {['Time', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday'].map((h) => (
                 <th key={h} style={{ padding: '9px 12px', textAlign: 'left' as const, fontSize: '11px', fontWeight: 700, color: '#fff', textTransform: 'uppercase' as const }}>{h}</th>
               ))}
@@ -423,9 +435,9 @@ const PAnn: React.FC<{ anns: any[] }> = ({ anns }) => (
     <PT t="Announcements" s="School notices for parents" />
     <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
       {anns.length === 0 ? <p style={{ color: '#94a3b8', fontSize: '13px' }}>No announcements.</p> : anns.map((a) => (
-        <div key={a.id} style={{ background: '#fff', border: '1px solid #e2e8f0', borderRadius: '3px', padding: '14px 16px', borderLeft: a.isPinned ? '3px solid #1e40af' : '1px solid #e2e8f0' }}>
+        <div key={a.id} style={{ background: '#fff', border: '1px solid #e2e8f0', borderRadius: '3px', padding: '14px 16px', borderLeft: a.isPinned ? '3px solid #2F628F' : '1px solid #e2e8f0' }}>
           <div style={{ display: 'flex', gap: '6px', marginBottom: '6px', flexWrap: 'wrap' as const }}>
-            <Badge label={a.category}       color="#1e40af" bg="#eff6ff" border="#bfdbfe" />
+            <Badge label={a.category}       color="#2F628F" bg="#eff6ff" border="#bfdbfe" />
             <Badge label={a.targetAudience} color="#334155" bg="#f1f5f9" border="#e2e8f0" />
             {a.isPinned && <Badge label="Pinned" color="#92400e" bg="#fffbeb" border="#fde68a" />}
           </div>

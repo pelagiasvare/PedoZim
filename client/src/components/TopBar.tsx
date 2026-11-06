@@ -1,5 +1,5 @@
 import React from 'react';
-import { Search, Sun, Moon, Bell, GraduationCap, ChevronDown, MessageSquare } from 'lucide-react';
+import { Search, Bell, GraduationCap, ChevronDown, MessageSquare, LogOut } from 'lucide-react';
 import { User, UserRole } from '../types';
 import { mockUsers } from '../data/mockData';
 import { ActivePage } from './Sidebar';
@@ -7,23 +7,23 @@ import { ActivePage } from './Sidebar';
 interface TopBarProps {
   currentUser: User;
   onSwitchUser: (user: User) => void;
-  theme: 'dark' | 'light';
-  onToggleTheme: () => void;
+  theme?: 'dark' | 'light';
+  onToggleTheme?: () => void;
   searchTerm: string;
   onSearchChange: (val: string) => void;
   activePage: ActivePage;
   onNavigate: (page: ActivePage) => void;
+  onLogout?: () => void;
 }
 
 export const TopBar: React.FC<TopBarProps> = ({
   currentUser,
   onSwitchUser,
-  theme,
-  onToggleTheme,
   searchTerm,
   onSearchChange,
   activePage,
   onNavigate,
+  onLogout,
 }) => {
   const [showRoleDropdown, setShowRoleDropdown] = React.useState(false);
 
@@ -38,7 +38,14 @@ export const TopBar: React.FC<TopBarProps> = ({
 
   return (
     <header className="topbar">
-      <div className="topbar-left">
+      <div className="topbar-left" style={{ display: 'flex', alignItems: 'center', gap: '14px' }}>
+        <img
+          src="/logo.png"
+          alt="Pedo Zim Logo"
+          style={{ height: '34px', width: 'auto', maxWidth: '140px', objectFit: 'contain', display: 'block', cursor: 'pointer' }}
+          onClick={() => onNavigate('overview')}
+          onError={(e) => { (e.currentTarget as HTMLImageElement).style.display = 'none'; }}
+        />
         {activePage !== 'overview' && (
           <div className="topbar-search">
             <Search size={14} className="topbar-search-icon" />
@@ -118,15 +125,21 @@ export const TopBar: React.FC<TopBarProps> = ({
           )}
         </div>
 
-        {/* Theme toggle */}
-        <button className="icon-btn" onClick={onToggleTheme} title="Toggle theme">
-          {theme === 'dark' ? <Sun size={14} /> : <Moon size={14} />}
-        </button>
-
         {/* Notifications */}
         <button className="icon-btn" title="Notice Board" onClick={() => onNavigate('announcements')}>
           <Bell size={14} />
         </button>
+
+        {onLogout && (
+          <button
+            onClick={onLogout}
+            className="btn btn-secondary btn-sm"
+            style={{ display: 'flex', alignItems: 'center', gap: '4px', height: '28px', padding: '0 8px', fontSize: '11px', color: 'var(--text-700)' }}
+            title="Return to Home page"
+          >
+            <LogOut size={12} /> Exit Portal
+          </button>
+        )}
       </div>
     </header>
   );

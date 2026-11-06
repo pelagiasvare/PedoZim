@@ -53,26 +53,30 @@ export const Sidebar: React.FC<SidebarProps> = ({ activePage, onNavigate, curren
   return (
     <aside className="sidebar">
       {/* Brand */}
-      <div className="sidebar-header" onClick={() => onNavigate('overview')}>
-        <div className="brand-badge">
-          <School size={14} />
-        </div>
-        <div>
-          <div className="brand-title">Pedo Zim</div>
-          <div className="brand-subtitle">School Management</div>
+      <div className="sidebar-header" onClick={() => onNavigate('overview')} style={{ cursor: 'pointer', padding: '12px 14px', display: 'flex', alignItems: 'center', gap: '8px' }}>
+        <img
+          src="/logo.png"
+          alt="Pedo Zim Logo"
+          style={{ height: '36px', maxWidth: '140px', width: 'auto', objectFit: 'contain', display: 'block' }}
+          onError={(e) => {
+            (e.currentTarget as HTMLImageElement).style.display = 'none';
+            const fallback = document.getElementById('sidebar-brand-text-fallback');
+            if (fallback) fallback.style.display = 'flex';
+          }}
+        />
+        <div id="sidebar-brand-text-fallback" style={{ display: 'none', alignItems: 'center', gap: '8px' }}>
+          <div className="brand-badge">
+            <School size={14} />
+          </div>
+          <div>
+            <div className="brand-title">Pedo Zim</div>
+            <div className="brand-subtitle">School Management</div>
+          </div>
         </div>
       </div>
 
       {/* Nav */}
       <nav className="sidebar-nav">
-        <button
-          className={`nav-item ${activePage === 'overview' ? 'active' : ''}`}
-          onClick={() => onNavigate('overview')}
-          style={{ marginBottom: '6px' }}
-        >
-          <Globe size={15} />
-          <span>Website Overview</span>
-        </button>
 
         <div className="nav-section-title">School Operations</div>
         {filteredNavItems.map((item) => (

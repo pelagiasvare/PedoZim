@@ -1,4 +1,14 @@
-export type UserRole = 'ADMIN' | 'TEACHER' | 'STUDENT' | 'STAFF' | 'PARENT' | 'ORG';
+export type UserRole =
+  | 'ADMIN'
+  | 'HEAD'
+  | 'DEPUTY_HEAD'
+  | 'TEACHER'
+  | 'STAFF'
+  | 'STUDENT'
+  | 'PARENT'
+  | 'ORG';
+
+export type StaffSubRole = 'BURSAR' | 'SECRETARY' | 'LIBRARIAN' | 'HOSTEL' | 'GENERAL';
 
 export type PortalView =
   | 'landing'
@@ -12,8 +22,9 @@ export interface User {
   name: string;
   email: string;
   role: UserRole;
+  subRole?: StaffSubRole;
   avatarUrl?: string;
-  referenceId?: string; // Student ID or Teacher ID
+  referenceId?: string;
 }
 
 export interface Student {
