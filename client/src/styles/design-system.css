@@ -798,8 +798,8 @@ button { font-family: inherit; cursor: pointer; }
   justify-content: space-between;
   width: 100%;
   max-width: 100%;
-  height: 60px;
-  padding: 0 40px;
+  height: 64px;
+  padding: 0 32px;
   background: #ffffff;
   border: none;
   border-bottom: 1px solid #e2e8f0;
@@ -1082,22 +1082,188 @@ button { font-family: inherit; cursor: pointer; }
 
 /* Hero — clears fixed pill navbar (54px + 12px top + 8px gap = ~74px) */
 .hero-fundah-display {
-  padding: 92px 0 56px;
+  padding: 96px 0 72px;
   background: #fff;
   border-bottom: 1px solid var(--border);
 }
 
 .hero-fundah-container {
-  max-width: 1100px;
+  max-width: 1200px;
   margin: 0 auto;
-  padding: 0 48px;
+  padding: 0 32px 0 80px;
   display: grid;
-  grid-template-columns: 1fr 380px;
-  gap: 48px;
-  align-items: start;
+  grid-template-columns: 1fr 400px;
+  gap: 56px;
+  align-items: center;
 }
 
-.hero-fundah-left { display: flex; flex-direction: column; gap: 14px; }
+.hero-fundah-left { display: flex; flex-direction: column; gap: 18px; }
+
+/* ── Hero right — photo card with login overlay ─────────────────── */
+.hero-photo-card {
+  position: relative;
+  width: 100%;
+  height: 520px;
+  border-radius: 12px;
+  overflow: hidden;
+  background: #1a3a5c;
+}
+
+.hero-photo-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.hero-overlay-login {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding: 18px;
+  background: rgba(10, 20, 40, 0.62);
+  backdrop-filter: blur(3px);
+  -webkit-backdrop-filter: blur(3px);
+}
+
+.hero-overlay-login .login-role-tabs {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  border-radius: 6px 6px 0 0;
+  overflow: hidden;
+  border: 1px solid rgba(255,255,255,0.2);
+  border-bottom: none;
+  margin-top: 8px;
+}
+
+.hero-overlay-login .role-tab-btn {
+  background: rgba(255,255,255,0.1);
+  color: rgba(255,255,255,0.85);
+  border: none;
+  border-right: 1px solid rgba(255,255,255,0.15);
+  font-size: 11px;
+  padding: 8px 4px;
+  gap: 3px;
+  cursor: pointer;
+}
+.hero-overlay-login .role-tab-btn:last-child { border-right: none; }
+.hero-overlay-login .role-tab-btn:hover { background: rgba(255,255,255,0.18); color: #fff; }
+.hero-overlay-login .role-tab-btn.active { background: #2F628F; color: #fff; }
+
+.hero-overlay-login .login-card-form {
+  background: rgba(255,255,255,0.97);
+  border-radius: 0 0 8px 8px;
+  padding: 12px 14px 14px;
+  border: 1px solid rgba(255,255,255,0.2);
+  border-top: none;
+  display: flex;
+  flex-direction: column;
+  gap: 9px;
+}
+
+/* ── Hero text ────────────────────────────────────────────────────── */
+.hero-trust-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  font-size: 13px;
+  font-weight: 600;
+  color: #64748b;
+}
+.hero-trust-badge svg { color: var(--brand); }
+
+.hero-fundah-title {
+  font-size: 38px;
+  font-weight: 800;
+  color: #0f172a;
+  line-height: 1.2;
+  letter-spacing: -0.02em;
+  margin: 0;
+}
+.highlight-color { color: var(--brand); }
+
+.hero-shona-motto {
+  font-size: 16px;
+  font-weight: 700;
+  font-style: italic;
+  color: var(--brand);
+}
+
+.hero-fundah-subtitle {
+  font-size: 15px;
+  color: #475569;
+  line-height: 1.6;
+}
+
+.hero-shona-closer {
+  font-size: 13px;
+  font-style: italic;
+  color: #64748b;
+}
+
+.hero-cta-row {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  flex-wrap: wrap;
+  margin-top: 4px;
+}
+
+.hero-btn-primary {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  height: 44px;
+  padding: 0 22px;
+  background: var(--brand);
+  color: #fff;
+  border: none;
+  border-radius: 7px;
+  font-family: inherit;
+  font-size: 14px;
+  font-weight: 700;
+  cursor: pointer;
+  box-shadow: 0 4px 14px rgba(30,64,175,0.28);
+  transition: background 0.15s, transform 0.1s;
+}
+.hero-btn-primary:hover { background: var(--brand-dark); transform: translateY(-1px); }
+
+.hero-btn-secondary {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  height: 44px;
+  padding: 0 18px;
+  background: transparent;
+  color: #334155;
+  border: 1px solid #cbd5e1;
+  border-radius: 7px;
+  font-family: inherit;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.15s;
+}
+.hero-btn-secondary:hover { background: #f8fafc; }
+
+.hero-play-icon {
+  width: 26px;
+  height: 26px;
+  background: var(--brand);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #fff;
+  flex-shrink: 0;
+}
+
+/* Old pill badges — hidden now */
+.hero-feature-pills-grid { display: none; }
+.hero-shona-motto        { display: block; }
+.hero-shona-closer       { display: block; }
 
 .hero-tagline-badge {
   display: inline-flex;

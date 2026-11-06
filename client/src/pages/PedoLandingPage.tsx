@@ -47,25 +47,85 @@ export const PedoLandingPage: React.FC<PedoLandingPageProps> = ({ onEnterPortal,
   const [activeSection, setActiveSection]   = useState('home');
 
   // Login Card Form State
-  const [selectedRole, setSelectedRole] = useState<'staff' | 'student' | 'parent' | 'org'>('org');
-  const [loginEmail, setLoginEmail] = useState('');
+  const [selectedRole, setSelectedRole] = useState<'staff' | 'student' | 'parent' | 'org'>('staff');
+  const [staffType, setStaffType]       = useState('admin');
+  const [loginEmail, setLoginEmail]     = useState('admin@school.ac.zw');
   const [loginPassword, setLoginPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
+  const [authMode, setAuthMode]         = useState<'login' | 'signup'>('login');
+  const [signupName, setSignupName]     = useState('');
+  const [authError, setAuthError]       = useState('');
+  const [authLoading, setAuthLoading]   = useState(false);
+
+  // Ref + scroll helper for login card
+  const loginRef = React.useRef<HTMLDivElement>(null);
+  const scrollToLogin = () => {
+    if (loginRef.current) {
+      const y = loginRef.current.getBoundingClientRect().top + window.scrollY - 80;
+      window.scrollTo({ top: y, behavior: 'smooth' });
+    }
+    setMobileMenuOpen(false);
+  };
+
+  // Staff account list
+  const STAFF_ACCOUNTS = [
+    { value: 'admin',     label: 'School Admin',       email: 'admin@school.ac.zw' },
+    { value: 'head',      label: 'Headmaster',         email: 'head@school.ac.zw' },
+    { value: 'deputy',    label: 'Deputy Headmaster',  email: 'deputy@school.ac.zw' },
+    { value: 'teacher',   label: 'Teacher',            email: 't.moyo@school.ac.zw' },
+    { value: 'bursar',    label: 'Bursar / Accounts',  email: 'bursar@school.ac.zw' },
+    { value: 'secretary', label: 'Secretary',          email: 'secretary@school.ac.zw' },
+    { value: 'librarian', label: 'Librarian',          email: 'library@school.ac.zw' },
+    { value: 'hostel',    label: 'Hostel Manager',     email: 'hostel@school.ac.zw' },
+  ];
+
+  const handleStaffTypeChange = (value: string) => {
+    setStaffType(value);
+    setAuthError('');
+    const account = STAFF_ACCOUNTS.find((a) => a.value === value);
+    if (account) setLoginEmail(account.email);
+  };
 
   const handleRoleTabChange = (role: 'staff' | 'student' | 'parent' | 'org') => {
     setSelectedRole(role);
+    setAuthError('');
     switch (role) {
-      case 'staff':   setLoginEmail('t.moyo@school.ac.zw'); break;
+      case 'staff':   handleStaffTypeChange('admin'); break;
       case 'student': setLoginEmail('t.mutasa@student.ac.zw'); break;
       case 'parent':  setLoginEmail('gmutasa@gmail.com'); break;
       case 'org':     setLoginEmail('director@pedozim.ac.zw'); break;
     }
   };
 
-  const handleLoginSubmit = (e: React.FormEvent) => {
+  const handleLoginSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    const matched = mockUsers.find((u) => u.email.toLowerCase() === loginEmail.toLowerCase());
-    onEnterPortal('dashboard', matched || undefined);
+    setAuthError('');
+    setAuthLoading(true);
+    try {
+      const { login, signUp } = await import('../services/authService');
+      if (authMode === 'login') {
+        const result = await login(loginEmail, loginPassword);
+        if (result.success) {
+          onEnterPortal('dashboard', result.user);
+        } else {
+          setAuthError(result.error);
+        }
+      } else {
+        if (!signupName.trim()) { setAuthError('Please enter your full name.'); setAuthLoading(false); return; }
+        const roleMap: Record<string, AppUser['role']> = {
+          staff: 'TEACHER', student: 'STUDENT', parent: 'PARENT', org: 'ORG',
+        };
+        const result = await signUp(signupName, loginEmail, loginPassword, roleMap[selectedRole]);
+        if (result.success) {
+          onEnterPortal('dashboard', result.user);
+        } else {
+          setAuthError(result.error);
+        }
+      }
+    } catch {
+      setAuthError('Something went wrong. Please try again.');
+    }
+    setAuthLoading(false);
   };
 
   const calculatedMonthly = (studentCount * 0.2).toFixed(2);
@@ -147,8 +207,16 @@ export const PedoLandingPage: React.FC<PedoLandingPageProps> = ({ onEnterPortal,
       <nav className={`pedo-floating-navbar ${isScrolled ? 'scrolled' : ''}`}>
         {/* Logo */}
         <div className="navbar-brand-section" onClick={() => { window.scrollTo({ top: 0, behavior: 'smooth' }); setMobileMenuOpen(false); }}>
-          <div className="navbar-logo-dot" />
-          <div className="navbar-brand-name">
+          <img
+            src="/logo.png"
+            alt="Pedo Zim"
+            style={{ height: '46px', width: 'auto', objectFit: 'contain' }}
+            onError={(e) => {
+              (e.currentTarget as HTMLImageElement).style.display = 'none';
+              (e.currentTarget.nextElementSibling as HTMLElement).style.display = 'flex';
+            }}
+          />
+          <div className="navbar-brand-name" style={{ display: 'none' }}>
             <span className="brand-primary">Pedo</span>
             <span className="brand-accent"> Zim</span>
           </div>
@@ -203,22 +271,31 @@ export const PedoLandingPage: React.FC<PedoLandingPageProps> = ({ onEnterPortal,
       </aside>
 
       {/* =================================================================
-          3. HERO SECTION (EXACT DISPLAY FROM USER UPLOADED SCREENSHOT)
-             Left: Headline + Subtitle + 12 Feature Pills
-             Right: Interactive Role Login Card
+          3. HERO SECTION
+             Layout: Left = text/headline/CTAs | Right = classroom photo
+             with login card overlaid. Navbar has the logo at top left.
          ================================================================= */}
       <section className="hero-fundah-display">
         <div className="hero-fundah-container">
-          {/* Left Column: Heading & 12 Feature Pills */}
+
+          {/* ── LEFT: headline, subtitle, CTAs ───────────────────────── */}
           <div className="hero-fundah-left">
-            <div className="hero-tagline-badge">One Platform, Every School Need</div>
+
+            {/* Pedo Zim logo — hero left column */}
+            <div>
+              <img
+                src="/logo.png"
+                alt="Pedo Zim School Management System"
+                style={{ height: '90px', width: 'auto', objectFit: 'contain', display: 'block' }}
+                onError={(e) => { (e.currentTarget as HTMLImageElement).style.display = 'none'; }}
+              />
+            </div>
+
             <h1 className="hero-fundah-title">
-              All-in-one School Management for <span className="highlight-color">Modern Schools</span>
+              One Platform, <span className="highlight-color">Every School Need</span>
             </h1>
 
-            <p className="hero-shona-motto">
-              Dzidzo Yakanaka, Ramangwana Rakanaka!
-            </p>
+            <p className="hero-shona-motto">Dzidzo Yakanaka, Ramangwana Rakanaka!</p>
 
             <p className="hero-fundah-subtitle">
               Empowering schools with smart technology to simplify administration, enhance learning,
@@ -229,117 +306,128 @@ export const PedoLandingPage: React.FC<PedoLandingPageProps> = ({ onEnterPortal,
               Pamwe chete tinovaka ramangwana rakanaka! Together we build a bright future.
             </p>
 
-            {/* 12 Feature Badges Grid */}
-            <div className="hero-feature-pills-grid">
-              {featurePills.map((pill, idx) => (
-                <div
-                  key={idx}
-                  className="hero-pill-badge"
-                  onClick={() => onEnterPortal('dashboard')}
-                  title={`Open ${pill.label}`}
-                >
-                  <span className="pill-badge-icon">{pill.icon}</span>
-                  <span className="pill-badge-text">{pill.label}</span>
-                </div>
-              ))}
+            {/* CTAs */}
+            <div className="hero-cta-row">
+              <button className="hero-btn-primary" onClick={scrollToLogin}>
+                Get Started for Free <ArrowRight size={16} />
+              </button>
+              <button className="hero-btn-secondary" onClick={() => scrollToSection('features')}>
+                <span className="hero-play-icon">
+                  <svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor"><polygon points="5,3 19,12 5,21"/></svg>
+                </span>
+                See how it works
+              </button>
             </div>
+
           </div>
 
-          {/* Right Column: Interactive Login Card from Screenshot */}
+          {/* ── RIGHT: classroom photo + login form overlay ──────────── */}
           <div className="hero-fundah-right">
-            <div className="hero-login-card">
-              {/* Role Switcher Tabs */}
-              <div className="login-role-tabs">
-                <button
-                  type="button"
-                  className={`role-tab-btn ${selectedRole === 'staff' ? 'active' : ''}`}
-                  onClick={() => handleRoleTabChange('staff')}
-                >
-                  <Briefcase size={14} />
-                  <span>School Staff</span>
-                </button>
+            <div className="hero-photo-card" ref={loginRef}>
 
-                <button
-                  type="button"
-                  className={`role-tab-btn ${selectedRole === 'student' ? 'active' : ''}`}
-                  onClick={() => handleRoleTabChange('student')}
-                >
-                  <BookOpen size={14} />
-                  <span>Student</span>
-                </button>
+              {/* Zimbabwean classroom photo */}
+              <img
+                src="https://images.unsplash.com/photo-1509062522246-3755977927d7?auto=format&fit=crop&w=1200&q=80"
+                alt="Students and teacher in a Zimbabwean classroom"
+                className="hero-photo-img"
+                style={{ objectPosition: 'center 30%' }}
+              />
 
-                <button
-                  type="button"
-                  className={`role-tab-btn ${selectedRole === 'parent' ? 'active' : ''}`}
-                  onClick={() => handleRoleTabChange('parent')}
-                >
-                  <User size={14} />
-                  <span>Parent</span>
-                </button>
+              {/* Login card overlaid on the photo */}
+              <div className="hero-overlay-login">
 
-                <button
-                  type="button"
-                  className={`role-tab-btn ${selectedRole === 'org' ? 'active' : ''}`}
-                  onClick={() => handleRoleTabChange('org')}
-                >
-                  <ShieldCheck size={14} />
-                  <span>Org Member</span>
-                </button>
-              </div>
-
-              {/* Login Header */}
-              <div className="login-card-header">
-                <h2 className="login-card-title">Welcome back</h2>
-                <p className="login-card-subtitle">Sign in to your Pedo account</p>
-              </div>
-
-              {/* Login Form */}
-              <form onSubmit={handleLoginSubmit} className="login-card-form">
-                <div className="login-input-group">
-                  <User size={18} className="login-input-icon" />
-                  <input
-                    type="text"
-                    value={loginEmail}
-                    onChange={(e) => setLoginEmail(e.target.value)}
-                    placeholder={selectedRole === 'parent' ? 'Phone number' : 'Email address'}
-                    required
-                    className="login-field"
-                  />
+                {/* Header — white text, clearly visible over the photo */}
+                <div style={{ textAlign: 'center', marginBottom: '10px', padding: '10px 12px', background: 'rgba(10,20,40,0.65)', borderRadius: '8px', backdropFilter: 'blur(4px)', border: '1px solid rgba(255,255,255,0.15)' }}>
+                  <h2 style={{ margin: 0, fontSize: '18px', fontWeight: 800, color: '#ffffff', lineHeight: 1.3, textShadow: '0 1px 4px rgba(0,0,0,0.6)' }}>
+                    {authMode === 'login' ? 'Welcome back' : 'Create account'}
+                  </h2>
+                  <p style={{ margin: '4px 0 0', fontSize: '12px', color: 'rgba(255,255,255,0.9)', fontWeight: 500 }}>
+                    {authMode === 'login' ? 'Sign in to your Pedo Zim account' : 'Register for Pedo Zim'}
+                  </p>
                 </div>
 
-                <div className="login-input-group">
-                  <Lock size={18} className="login-input-icon" />
-                  <input
-                    type={showPassword ? 'text' : 'password'}
-                    value={loginPassword}
-                    onChange={(e) => setLoginPassword(e.target.value)}
-                    placeholder="Password"
-                    required
-                    className="login-field"
-                  />
-                  <button
-                    type="button"
-                    className="password-toggle-btn"
-                    aria-label={showPassword ? 'Hide password' : 'Show password'}
-                    onClick={() => setShowPassword(!showPassword)}
-                  >
-                    {showPassword ? <EyeOff size={16} /> : <Eye size={16} />}
+                {/* Sign In / Sign Up toggle */}
+                <div style={{ display: 'flex', marginBottom: '8px', border: '1px solid rgba(255,255,255,0.25)', borderRadius: '6px', overflow: 'hidden' }}>
+                  <button type="button"
+                    onClick={() => { setAuthMode('login'); setAuthError(''); }}
+                    style={{ flex: 1, padding: '7px', border: 'none', background: authMode === 'login' ? '#2F628F' : 'rgba(255,255,255,0.1)', color: '#fff', fontSize: '13px', fontWeight: authMode === 'login' ? 700 : 400, cursor: 'pointer', borderRight: '1px solid rgba(255,255,255,0.15)' }}>
+                    Sign In
+                  </button>
+                  <button type="button"
+                    onClick={() => { setAuthMode('signup'); setAuthError(''); }}
+                    style={{ flex: 1, padding: '7px', border: 'none', background: authMode === 'signup' ? '#2F628F' : 'rgba(255,255,255,0.1)', color: '#fff', fontSize: '13px', fontWeight: authMode === 'signup' ? 700 : 400, cursor: 'pointer' }}>
+                    Sign Up
                   </button>
                 </div>
 
-                <div className="login-forgot-row">
-                  <a href="#forgot" onClick={(e) => { e.preventDefault(); onEnterPortal('dashboard'); }} className="login-forgot-link">
-                    Forgot Password?
-                  </a>
+                {/* Staff type selector — only on staff tab */}
+                {selectedRole === 'staff' && authMode === 'login' && (
+                  <div style={{ display: 'flex', flexDirection: 'column', gap: '4px', marginBottom: '2px' }}>
+                    <label style={{ fontSize: '11px', fontWeight: 700, color: 'rgba(255,255,255,0.8)', textTransform: 'uppercase', letterSpacing: '0.05em' }}>
+                      I am logging in as...
+                    </label>
+                    <select
+                      value={staffType}
+                      onChange={(e) => handleStaffTypeChange(e.target.value)}
+                      style={{ height: '32px', padding: '0 10px', border: '1px solid rgba(255,255,255,0.3)', borderRadius: '4px', fontSize: '13px', fontFamily: 'inherit', background: 'rgba(255,255,255,0.9)', color: '#0f172a', cursor: 'pointer' }}
+                    >
+                      {STAFF_ACCOUNTS.map((a) => (
+                        <option key={a.value} value={a.value}>{a.label}</option>
+                      ))}
+                    </select>
+                  </div>
+                )}
+
+                {/* Role tabs */}
+                <div className="login-role-tabs">
+                  <button type="button" className={`role-tab-btn ${selectedRole === 'staff' ? 'active' : ''}`} onClick={() => handleRoleTabChange('staff')}><Briefcase size={13} /><span>Staff</span></button>
+                  <button type="button" className={`role-tab-btn ${selectedRole === 'student' ? 'active' : ''}`} onClick={() => handleRoleTabChange('student')}><BookOpen size={13} /><span>Student</span></button>
+                  <button type="button" className={`role-tab-btn ${selectedRole === 'parent' ? 'active' : ''}`} onClick={() => handleRoleTabChange('parent')}><User size={13} /><span>Parent</span></button>
+                  <button type="button" className={`role-tab-btn ${selectedRole === 'org' ? 'active' : ''}`} onClick={() => handleRoleTabChange('org')}><ShieldCheck size={13} /><span>Org</span></button>
                 </div>
 
-                <button type="submit" className="login-submit-btn">
-                  <span>Login</span>
-                  <ArrowRight size={18} />
-                </button>
-              </form>
+                <form onSubmit={handleLoginSubmit} className="login-card-form">
+                  {authMode === 'signup' && (
+                    <div className="login-input-group">
+                      <User size={16} className="login-input-icon" />
+                      <input type="text" value={signupName} onChange={(e) => setSignupName(e.target.value)}
+                        placeholder="Full name" required className="login-field" />
+                    </div>
+                  )}
+                  <div className="login-input-group">
+                    <User size={16} className="login-input-icon" />
+                    <input type="email" value={loginEmail} onChange={(e) => { setLoginEmail(e.target.value); setAuthError(''); }}
+                      placeholder="Email address" required className="login-field" />
+                  </div>
+                  <div className="login-input-group">
+                    <Lock size={16} className="login-input-icon" />
+                    <input type={showPassword ? 'text' : 'password'} value={loginPassword} onChange={(e) => { setLoginPassword(e.target.value); setAuthError(''); }}
+                      placeholder={authMode === 'signup' ? 'Create password (min 6 chars)' : 'Password'} required className="login-field" />
+                    <button type="button" className="password-toggle-btn" onClick={() => setShowPassword(!showPassword)} aria-label="Toggle password">
+                      {showPassword ? <EyeOff size={15} /> : <Eye size={15} />}
+                    </button>
+                  </div>
+                  {authError && (
+                    <div style={{ padding: '6px 10px', background: '#fef2f2', border: '1px solid #fecaca', borderRadius: '4px', fontSize: '12px', color: '#991b1b', fontWeight: 500 }}>
+                      {authError}
+                    </div>
+                  )}
+                  {authMode === 'login' && (
+                    <div className="login-forgot-row">
+                      <span style={{ fontSize: '11px', color: 'rgba(255,255,255,0.7)' }}>Demo password: <strong style={{ color: '#fff' }}>Pedo@2026</strong></span>
+                    </div>
+                  )}
+                  <button type="submit" className="login-submit-btn" disabled={authLoading}
+                    style={{ opacity: authLoading ? 0.7 : 1 }}>
+                    <span>{authLoading ? 'Please wait...' : authMode === 'login' ? 'Sign In' : 'Create Account'}</span>
+                    {!authLoading && <ArrowRight size={16} />}
+                  </button>
+                </form>
+              </div>
+
             </div>
           </div>
+
         </div>
       </section>
 
@@ -602,7 +690,17 @@ export const PedoLandingPage: React.FC<PedoLandingPageProps> = ({ onEnterPortal,
           {/* Brand Column */}
           <div className="footer-brand-col">
             <div className="footer-brand-header">
-              <div className="footer-brand-text">
+              <img
+                src="/logo.png"
+                alt="Pedo Zim"
+                style={{ height: '72px', width: 'auto', objectFit: 'contain', display: 'block', marginBottom: '8px' }}
+                onError={(e) => {
+                  (e.currentTarget as HTMLImageElement).style.display = 'none';
+                  const fb = e.currentTarget.nextElementSibling as HTMLElement;
+                  if (fb) fb.style.display = 'flex';
+                }}
+              />
+              <div className="footer-brand-text" style={{ display: 'none' }}>
                 <span className="footer-brand-name">Pedo</span>
                 <span className="footer-brand-accent">Zim</span>
               </div>
