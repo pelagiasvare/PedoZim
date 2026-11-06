@@ -798,7 +798,7 @@ button { font-family: inherit; cursor: pointer; }
   justify-content: space-between;
   width: 100%;
   max-width: 100%;
-  height: 64px;
+  height: 74px;
   padding: 0 32px;
   background: #ffffff;
   border: none;
@@ -815,8 +815,8 @@ button { font-family: inherit; cursor: pointer; }
   right: auto;
   width: calc(100% - 48px);
   max-width: 1080px;
-  height: 52px;
-  padding: 0 20px;
+  height: 64px;
+  padding: 0 24px;
   transform: translateX(-50%);
   background: rgba(255, 255, 255, 0.82);
   backdrop-filter: blur(18px);
@@ -825,6 +825,14 @@ button { font-family: inherit; cursor: pointer; }
   border-bottom: 1px solid rgba(255, 255, 255, 0.6);
   border-radius: 999px;
   box-shadow: 0 8px 32px rgba(30, 64, 175, 0.14), 0 2px 8px rgba(0,0,0,0.07);
+}
+
+/* Navbar logo — larger so the wordmark is clearly visible */
+.navbar-brand-logo {
+  height: 56px;
+  width: auto;
+  object-fit: contain;
+  display: block;
 }
 
 /* Logo dot accent */
@@ -1080,12 +1088,47 @@ button { font-family: inherit; cursor: pointer; }
   text-decoration: none;
 }
 
-/* Hero — clears fixed pill navbar (54px + 12px top + 8px gap = ~74px) */
+/* Hero — classroom photo background with a dark scrim so the words stay legible */
 .hero-fundah-display {
+  position: relative;
   padding: 96px 0 72px;
-  background: #fff;
-  border-bottom: 1px solid var(--border);
+  background: #fff url('/hero-classroom.jpg') center / cover no-repeat;
 }
+.hero-fundah-display::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: rgba(15, 30, 50, 0.55);
+  z-index: 0;
+  pointer-events: none;
+}
+.hero-fundah-container { position: relative; z-index: 1; }
+
+/* Hero text legibility + sizing over the background photo */
+.hero-fundah-display .hero-fundah-title {
+  color: #ffffff;
+  text-shadow: 0 1px 6px rgba(0,0,0,0.45);
+  font-size: clamp(34px, 5vw, 52px);
+  line-height: 1.15;
+  font-weight: 800;
+}
+.hero-fundah-display .highlight-color { color: #cfe0ef; }
+.hero-fundah-display .hero-shona-motto { color: #bcd4ea; font-size: clamp(18px, 1.7vw, 22px); }
+.hero-fundah-display .hero-fundah-subtitle { color: rgba(255,255,255,0.92); font-size: clamp(16px, 1.4vw, 19px); }
+.hero-fundah-display .hero-shona-closer { color: rgba(255,255,255,0.85); font-size: clamp(14px, 1.2vw, 16px); }
+
+/* CTA buttons — make the secondary (“See how it works”) visible on the dark hero */
+.hero-fundah-display .hero-btn-primary { font-size: 16px; height: 48px; padding: 0 26px; }
+.hero-fundah-display .hero-btn-secondary {
+  background: transparent;
+  color: #ffffff;
+  border: 1px solid rgba(255,255,255,0.7);
+  font-size: 16px;
+  height: 48px;
+  padding: 0 20px;
+}
+.hero-fundah-display .hero-btn-secondary:hover { background: rgba(255,255,255,0.14); }
+.hero-fundah-display .hero-play-icon { background: rgba(255,255,255,0.18); border: 1px solid rgba(255,255,255,0.6); color: #fff; }
 
 .hero-fundah-container {
   max-width: 1200px;
@@ -1433,9 +1476,8 @@ button { font-family: inherit; cursor: pointer; }
 
 /* Who we are */
 .section-who-we-are {
-  background: var(--brand);
+  background: #ffffff;
   padding: 64px 2rem;
-  border-bottom: 1px solid var(--brand-dark);
 }
 
 .who-we-are-container {
@@ -1458,25 +1500,25 @@ button { font-family: inherit; cursor: pointer; }
   margin-bottom: 10px;
 }
 
-.section-who-we-are .section-kicker { color: #cfe0ef; }
+.section-who-we-are .section-kicker { color: var(--brand); }
 
 .who-we-are-title {
   font-size: 24px;
   font-weight: 700;
-  color: #fff;
+  color: var(--text-900);
   margin-bottom: 12px;
 }
 
 .who-we-are-desc {
   font-size: 14px;
-  color: #e6eef6;
+  color: var(--text-700);
   line-height: 1.6;
 }
 
 .who-we-are-divider {
   width: 40px;
   height: 2px;
-  background: rgba(255,255,255,0.3);
+  background: var(--brand);
   margin: 18px 0;
 }
 
@@ -1490,7 +1532,7 @@ button { font-family: inherit; cursor: pointer; }
 .stat-col-val {
   font-size: 22px;
   font-weight: 700;
-  color: #fff;
+  color: var(--text-900);
   line-height: 1.2;
 }
 .stat-col-lbl {
@@ -1498,14 +1540,14 @@ button { font-family: inherit; cursor: pointer; }
   font-weight: 600;
   letter-spacing: 0.07em;
   text-transform: uppercase;
-  color: #cfe0ef;
+  color: var(--text-700);
   margin-top: 3px;
 }
 
 .stat-col-sep {
   width: 1px;
   height: 40px;
-  background: rgba(255,255,255,0.2);
+  background: var(--border-dark);
   margin: 0 20px;
 }
 
@@ -1514,9 +1556,10 @@ button { font-family: inherit; cursor: pointer; }
 /* Solid white brand card — real logo + wordmark, full card visible */
 .who-we-are-brand-card {
   background: #fff;
-  border: 1px solid var(--brand-dark);
+  border: 1px solid var(--border-dark);
   border-radius: var(--radius);
   padding: 32px;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.06);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -1552,7 +1595,6 @@ button { font-family: inherit; cursor: pointer; }
 .section-modules {
   background: #fff;
   padding: 64px 2rem;
-  border-bottom: 1px solid var(--border);
 }
 
 .modules-header {
@@ -1637,7 +1679,6 @@ button { font-family: inherit; cursor: pointer; }
   color: #fff;
   padding: 56px 2rem;
   text-align: center;
-  border-bottom: 1px solid var(--brand-dark);
 }
 
 .cta-banner-sub {
@@ -1670,7 +1711,6 @@ button { font-family: inherit; cursor: pointer; }
 .section-pricing {
   background: #f8fafc;
   padding: 64px 2rem;
-  border-bottom: 1px solid var(--border);
 }
 
 .pricing-container {
@@ -1801,7 +1841,6 @@ button { font-family: inherit; cursor: pointer; }
 .section-faq {
   background: #fff;
   padding: 64px 2rem;
-  border-bottom: 1px solid var(--border);
 }
 
 .faq-container {
@@ -2091,6 +2130,9 @@ button { font-family: inherit; cursor: pointer; }
 
 .footer-brand-header { margin-bottom: 12px; }
 
+/* Footer logo wordmark rendered solid white so it is visible on the blue footer */
+.footer-brand-logo { filter: brightness(0) invert(1); }
+
 .footer-brand-text { display: flex; align-items: center; gap: 3px; }
 
 .footer-brand-name   { font-size: 18px; font-weight: 800; color: #fff; }
@@ -2243,9 +2285,10 @@ button { font-family: inherit; cursor: pointer; }
 
 @media (max-width: 480px) {
   /* Mobile: even tighter */
-  .pedo-floating-navbar { width: calc(100% - 24px); top: 8px; height: 48px; padding: 0 14px; }
+  .pedo-floating-navbar { width: calc(100% - 24px); top: 8px; height: 56px; padding: 0 14px; }
   .btn-navbar-get-started { padding: 0 12px; font-size: 12px; height: 30px; }
   .navbar-brand-name { font-size: 15px; }
+  .navbar-brand-logo { height: 46px; }
 
   /* Sidebar becomes very slim on mobile */
   .social-sidebar { padding: 10px 5px; gap: 7px; border-radius: 0 8px 8px 0; }

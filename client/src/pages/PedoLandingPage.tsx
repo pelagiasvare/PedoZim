@@ -210,7 +210,7 @@ export const PedoLandingPage: React.FC<PedoLandingPageProps> = ({ onEnterPortal,
           <img
             src="/logo.png"
             alt="Pedo Zim"
-            style={{ height: '46px', width: 'auto', objectFit: 'contain' }}
+            className="navbar-brand-logo"
             onError={(e) => {
               (e.currentTarget as HTMLImageElement).style.display = 'none';
               (e.currentTarget.nextElementSibling as HTMLElement).style.display = 'flex';
@@ -280,16 +280,6 @@ export const PedoLandingPage: React.FC<PedoLandingPageProps> = ({ onEnterPortal,
 
           {/* ── LEFT: headline, subtitle, CTAs ───────────────────────── */}
           <div className="hero-fundah-left">
-
-            {/* Pedo Zim logo — hero left column */}
-            <div>
-              <img
-                src="/logo.png"
-                alt="Pedo Zim School Management System"
-                style={{ height: '90px', width: 'auto', objectFit: 'contain', display: 'block' }}
-                onError={(e) => { (e.currentTarget as HTMLImageElement).style.display = 'none'; }}
-              />
-            </div>
 
             <h1 className="hero-fundah-title">
               One Platform, <span className="highlight-color">Every School Need</span>
@@ -693,6 +683,7 @@ export const PedoLandingPage: React.FC<PedoLandingPageProps> = ({ onEnterPortal,
               <img
                 src="/logo.png"
                 alt="Pedo Zim"
+                className="footer-brand-logo"
                 style={{ height: '72px', width: 'auto', objectFit: 'contain', display: 'block', marginBottom: '8px' }}
                 onError={(e) => {
                   (e.currentTarget as HTMLImageElement).style.display = 'none';
