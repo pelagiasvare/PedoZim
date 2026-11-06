@@ -3,6 +3,7 @@
 *Prepared by: Pelagia Svare*  
 *Target: Primary and Secondary Schools (Zimbabwe & Regional)*  
 *Repository: [https://github.com/pelagiasvare/PedoZim](https://github.com/pelagiasvare/PedoZim)*
+*Live Demo: [https://pedo-zim.vercel.app](https://pedo-zim.vercel.app)*
 
 ---
 
